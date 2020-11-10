@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar canción</title>
+    <link rel="stylesheet" href="Estilos_Todas_Paginas/E_ModificarCancion.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+</head>
+
+<body onload="CargarInformacion()">
+
+
+    <input type="checkbox" id="check">
+    <header>
+        <label for="check">
+            <i class="fa fa-bars" id="sidebar_btn"></i>
+        </label>
+        <div class="left_area">
+            <h3>Music <span>Station</span></h3>
+        </div>
+        <div class="rigth_are">
+            <a href="#" onclick="Inicio()" class="logout_btn">Inicio</a>
+        </div>
+    </header>
+
+    <div class="sidebar">
+        <center>
+            <img src="Estilos_Todas_Paginas/music_station.jpg" class="procfile_image" alt="" style="width: 100px; height: 100px;">
+            <br><br>
+        </center>
+        <a href="#" onclick="IrPerfil()"><i class="fa fa-user" aria-hidden="true"><span> Perfil</span></i></a>
+        <a href="#"><i class="fa fa-play" aria-hidden="true"><span> Canciones</span></i></a>
+        <a href="#" onclick="CargarCanciones()" class="items1"><i class="fa fa-file" aria-hidden="true"><span> Cargar canciones</span></i></a>
+        <a href="#" onclick="TablaDeCanciones()" class="items1"><i class="fa fa-table" aria-hidden="true"><span> Tabla de canciones</span></i></a>
+        <a href="#" onclick="Solicitudes()" class="items1"><i class="fa fa-list-ol" aria-hidden="true"><span> Solicitudes</span></i></a>
+        <a href="#"><i class="fa fa-users" aria-hidden="true"><span> Usuarios</span></i></a>
+        <a href="#" onclick="UsuariosRegistrados()" class="items1"><i class="fa fa-registered" aria-hidden="true"><span> Usuarios Registrados</span></i></a>
+        <a href="#" onclick="RegistrarUsuario()" class="items1"><i class="fa fa-user-plus" aria-hidden="true"><span> Registrar usuario</span></i></a>
+        <a href="#" onclick="VerPlaylist()"><i class="fa fa-fast-forward" aria-hidden="true"><span> Mi Playilst</span></i></a>
+        <a href="#" onclick="CerrarSesion()"><i class="fa fa-sign-out" aria-hidden="true"><span> Cerrar sesión</span></i></a>
+    </div>
+    <br><br>
+
+    <br><br><br>
+    <section class="form-register">
+        <h4 style="font-size: 30px;"><i class="fa fa-cog" aria-hidden="true"></i> MODIFICAR CANCIÓN</h4>
+        <label for="" style="text-align: left;">Nombre de la cancion:</label>
+                            <input class="controls" type="text" id="Nombre">
+                            <label for="">Artista:</label>
+                            <input class="controls" type="text" id="Artista">
+                            <label for="">Album:</label>
+                            <input class="controls" type="text" id="Album">
+                            <label for="">Fecha de lanzamiento:</label>
+                            <input class="controls" type="text" id="Fecha">
+                            <label for="">Link de Spotify:</label>
+                            <input class="controls" type="text" id="Spotify">
+                            <label for="">Link de Youtube:</label>
+                            <input class="controls" type="text" id="Youtube">
+                            <label for="">Link de la imagen:</label>
+                            <input class="controls" type="text" id="Imagen">
+                            <button class="botons" onclick="ModificarCancion()" type="button">Guardar Cambios</button>
+    </section>
+
+    <br><br>
+    <footer>
+        <div class="contenedor">
+            <p class="copy">Music Station &copy; 2020</p>
+            <div class="sociales">
+                <a class="icon-facebook-official" href="#"></a>
+                <a class="icon-twitter" href="#"></a>
+                <a class="icon-facebook-official" href="#"></a>
+                <a class="icon-twitter" href="#"></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+    <script>
+        var cargar
+        var usuario
+        function CargarInformacion() {
+            cargar = sessionStorage.buscarCancion
+            var tabla = document.querySelector('#Cuerpo')
+
+            fetch(`http://localhost:5000/Musica/${cargar}`)
+                .then(response => response.json())
+                .catch(error => {
+                    console.log(error)
+                })
+                .then(res => {
+                        document.querySelector('#Nombre').value = res.nombre
+                        document.querySelector('#Artista').value = res.artista
+                        document.querySelector('#Album').value = res.album
+                        document.querySelector('#Fecha').value = res.fecha
+                        document.querySelector('#Spotify').value = res.spotify
+                        document.querySelector('#Youtube').value = res.youtube
+                        document.querySelector('#Imagen').value = res.imagen
+                })
+        }
+
+        function ModificarCancion() {
+            var name = document.querySelector('#Nombre').value
+            var artist = document.querySelector('#Artista').value
+            var album = document.querySelector('#Album').value
+            var fecha = document.querySelector('#Fecha').value
+            var spotify = document.querySelector('#Spotify').value
+            var youtube = document.querySelector('#Youtube').value
+            var imagen = document.querySelector('#Imagen').value
+
+            var objeto = {
+                'nombre':name,
+                'artista':artist,
+                'album':album,
+                'fecha':fecha,
+                'imagen':imagen,
+                'spotify':spotify,
+                'youtube':youtube
+            }
+
+            fetch(`http://localhost:5000/Musica/ModificarCancion/${cargar}`,{
+                method: 'PUT',
+                body: JSON.stringify(objeto), // Siempre convertir en JSON nuestro objeto
+                headers:{
+                    'Content-Type': 'application/json'
+                }
+                }).then(response => response.json())
+                .catch(error => {
+                    alert(`Ocurrio un error.`)
+                    console.log(error)
+                }).then(res => {
+                    alert(res.message)
+                    alert(`La canción se actualizó con éxito.`)
+                })
+        }
+
+        //OPCIONES
+        function IrPerfil(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario",usuario)
+            location.href="Perfil1.html"
+        }
+
+        function CargarCanciones(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="Cargar_Canciones.html"
+        }
+
+        function TablaDeCanciones(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="Tabla_canciones.html"
+        }
+
+        function Solicitudes(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="CancionesSolicitadas.html"
+        }
+
+        function UsuariosRegistrados(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="Usuarios_Registrados.html"
+        }
+
+        function RegistrarUsuario(){
+            alert("Si ingreso aqui")
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="Registrar_Usuario.html"
+        }
+
+        function VerPlaylist(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="MiPlaylist1.html"
+        }
+
+        function CerrarSesion(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="Login.html"
+        }
+
+        function Inicio(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="Pagina_Principal1.html"
+        }
+    </script>
+
+</body>
+
+</html>

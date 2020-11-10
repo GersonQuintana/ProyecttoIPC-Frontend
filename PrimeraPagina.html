@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Principal</title>
+    <link rel="stylesheet" href="Estilos_Todas_Paginas/E_PrimeraPagina.css">
+</head>
+<body>
+    <embed src="Lean - Superiority x Towy x Osquel x Beltito x Sammy x Falsetto (NUEVOEXITO.ORG).mp3" autostarty="true" loop="true" volume="80" width="0" height="0">
+    <header class="bg_animate">
+        <div class="header_nav">
+            <div class="contenedor">
+                <h1></h1>
+                <nav>
+                    <a href="#" onclick="AcercaDe()" style="font-size: 20px;">Acerca de la aplicación</a>
+                    <a href="#" onclick="Contactenos()" style="font-size: 20px;">Contáctenos</a>
+                </nav>
+            </div>
+        </div>
+
+        <section class="banner contenedor">
+            <section class="banner_title">
+                <h2><b>MUSICA STATION</b></h2>
+                <a href="#" class="llamanos" onclick="Registrar()" style="margin-left: 65px;">Registrarme</a>
+                <a href="#" class="llamanos" onclick="IniciarSesion()" style="margin-left: 100px;">Iniciar sesión</a>
+            </section>
+            <div class="banner_img">
+                <img src="imag/music_station.jpg" alt="">
+            </div>
+        </section>
+
+        <div class="burbujas">
+            <div class="burbuja"></div>
+            <div class="burbuja"></div>
+            <div class="burbuja"></div>
+            <div class="burbuja"></div>
+            <div class="burbuja"></div>
+            <div class="burbuja"></div>
+            <div class="burbuja"></div>
+            <div class="burbuja"></div>
+            <div class="burbuja"></div>
+            <div class="burbuja"></div>
+            <div class="burbuja"></div>
+        </div>
+    </header>
+
+    <script>
+        function IniciarSesion(){
+            location.href="Login.html"
+        }
+
+        function Registrar(){
+            location.href="Registro.html"
+        }
+
+        function AcercaDe(){
+            alert("Aplicación web desarrollada en el año 2020.")
+        }
+
+        function Contactenos(){
+            alert("Aplicación web desarrollada por Gerson Quintana. No. de teléfono: 3357 1093. Facebook: Gerson Quintana.")
+        }
+    </script>
+</body>
+</html>

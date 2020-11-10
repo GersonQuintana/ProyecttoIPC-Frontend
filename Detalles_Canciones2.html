@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Estilos_Todas_Paginas/E_DetallesCanciones.css">
+    <title>Detalles de Canciones</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+</head>
+<body onload="CargarInfo()">
+
+    <input type="checkbox" id="check">
+    <header>
+        <label for="check">
+            <i class="fa fa-bars" id="sidebar_btn"></i>
+        </label>
+        <div class="left_area">
+            <h3>Music <span>Station</span></h3>
+        </div>
+        <div class="rigth_are">
+            <a href="#" onclick="Inicio()" class="logout_btn">Inicio</a>
+        </div>
+    </header>
+
+    <div class="sidebar">
+        <center>
+            <img src="Estilos_Todas_Paginas/music_station.jpg" class="procfile_image" alt="" style="width: 100px; height: 100px;">
+            <br><br>
+        </center>
+        <a href="#" onclick="IrPerfil()"><i class="fa fa-user" aria-hidden="true"><span> Mi Perfil</span></i></a>
+        <a href="#"><i class="fa fa-play" aria-hidden="true"><span> Canciones</span></i></a>
+        <a href="#" onclick="Solicitudes()" class="items1"><i class="fa fa-bell" aria-hidden="true"><span> Solicitar canción</span></i></a>
+        <a href="#" onclick="VerPlaylist()"><i class="fa fa-fast-forward" aria-hidden="true"><span> Mi Playilst</span></i></a>
+        <a href="#" onclick="CerrarSesion()"><i class="fa fa-sign-out" aria-hidden="true"><span> Cerrar sesión</span></i></a>
+    </div>
+
+    <div class="seccion-titulo">
+        <h2 id="titulo"><u>DETALLES DE LA CANCIÓN</u></h2>
+    </div>
+
+    <br><br><br><br><br><br>
+    <br><br><br><br><br><br>
+
+<div class="contenedor">
+        <div id="contenedor1" ></div>
+        <div id="contenedor2"></div>
+</div>
+
+<br><br>
+        
+
+        <div class="coment">
+            <input type="text" id="comentario" style="width: 500px; height: 50px;" placeholder="Escribe un comentario"><br><br>
+            <button onclick="Comentar()" type="button" name="button" class="btn login_btn">Agregar comentario</button>
+        </div>
+    
+        <br><br>
+        <h1 style="margin-top: 10px; text-align: center;">COMENTARIOS</h1><br>
+        <div id="contenedor3">
+        </div>
+
+        <br><br>
+        <footer>
+            <div class="contenedor5">
+                <p class="copy">Music Station &copy; 2020</p>
+                <div class="sociales">
+                    <a class="icon-facebook-official" href="#"></a>
+                    <a class="icon-twitter" href="#"></a>
+                    <a class="icon-facebook-official" href="#"></a>
+                    <a class="icon-twitter" href="#"></a>
+                </div>
+            </div>
+        </footer>
+    
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    
+        <script>
+            var nombreCancion
+            var person
+            var usuario
+            function CargarInfo(){
+                var cargar = sessionStorage.buscar
+                person = sessionStorage.persona
+                var imagen = document.querySelector('#contenedor1')
+                var video = document.querySelector('#contenedor2')
+                var coments = document.querySelector('#contenedor3')
+    
+                fetch(`http://localhost:5000/Musica/${cargar}`)
+                .then(response => response.json())
+                .catch(error => {
+                    console.log(error)
+                })
+                
+                .then(res => {
+                    nombreCancion = res.nombre
+                    identify = res.identificador
+
+                    imagen.innerHTML = `<img src="${res.imagen}" alt="" width="350px" height="500px"><footer>${res.nombre}</footer><br>
+                    <p>${res.nombre}</p>`
+    
+                    video.innerHTML = `<iframe src="${res.youtube}" frameborder="0" width="650px" height="400px"></iframe>
+             <ul class="items">
+                <li>
+                    <span class="badge"><i class="fa fa-music" aria-hidden="true"></i></span>
+                    <span class="name"><b>Artista:</b></span>
+                    <span class="points">${res.artista}</span>
+                </li>
+                <li>
+                    <span class="badge"><i class="fa fa-file" aria-hidden="true"></i></span>
+                    <span class="name"><b>Album:</b></span>
+                    <span class="points">${res.album}</span>
+                </li>
+                <li>
+                    <span class="bage"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                    <span class="name"><b>Fecha de lanzamiento:</b></span>
+                    <span class="points">${res.fecha}</span>
+                </li>
+                <li>
+                    <span class="badge"><i class="fa fa-video-camera" aria-hidden="true"></i></span>
+                    <span class="name"><b>Link de Spotify:</b></span>
+                    <span class="points">${res.spotify}</span>
+                </li>
+            </ul>`
+
+            verComentarios(res.nombre)
+                })
+            }
+
+            function verComentarios(variable){
+                var coments = document.querySelector('#contenedor3')
+                fetch(`http://localhost:5000/Musica/Comentarios/${variable}`)
+                .then(response => response.json())
+                .then(res => {
+                    for (var i in res){
+                        coments.innerHTML += `<textarea id="texta" name="" id="" cols="100" rows="2" disabled>${person}: ${res[i].comentario}</textarea><br>`
+                    }
+                })
+            }
+
+            function Comentar(){
+                var coment = document.querySelector('#comentario').value
+                var person = sessionStorage.persona
+                var cancion = document
+
+                var objeto = {
+                    'cancion': nombreCancion,
+                    'persona': person,
+                    'comentario': coment
+                }
+
+                fetch(`http://localhost:5000/Musica/ComentarioNuevo`,{
+                method: 'PUT',
+                body: JSON.stringify(objeto), // Siempre convertir en JSON nuestro objeto
+                headers:{
+                    'Content-Type': 'application/json'
+                }
+                }).then(response => response.json())
+                .catch(error => {
+                    alert(`Ocurrio un error`)
+                    console.log(error)
+                }).then(res => {
+                    alert(res.message)
+                    alert(`El nombre actual es ${person}`)
+                    location.href="Detalles_Canciones2.html"
+                })
+                }
+
+                //OPCIONES
+        function IrPerfil(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario",usuario)
+            location.href="Perfil2.html"
+        }
+
+        function Solicitudes(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="SolicitarCancion.html"
+        }
+
+        function VerPlaylist(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="MiPlaylist2.html"
+        }
+
+        function CerrarSesion(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="PrimeraPagina.html"
+        }
+
+        function Inicio(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="PaginaPrincipal2.html"
+        }
+
+        </script>
+</body>
+</html>

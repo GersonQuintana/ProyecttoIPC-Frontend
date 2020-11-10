@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Estilos_Todas_Paginas/E_RegistrarUsuario.css">
+    <title>Registrar usuario</title>
+</head>
+<body>
+
+    <input type="checkbox" id="check">
+    <header>
+        <label for="check">
+            <i class="fa fa-bars" id="sidebar_btn"></i>
+        </label>
+        <div class="left_area">
+            <h3>Coding <span>Sow</span></h3>
+        </div>
+        <div class="rigth_are">
+            <a href="#" onclick="Inicio()" class="logout_btn">Inicio</a>
+        </div>
+    </header>
+
+    <div class="sidebar">
+        <center>
+            <img src="Estilos_Todas_Paginas/music_station.jpg" class="procfile_image" alt="" style="width: 100px; height: 100px;">
+            <br><br>
+        </center>
+        <a href="#" onclick="IrPerfil()"><i class="fa fa-user" aria-hidden="true"><span> Perfil</span></i></a>
+        <a href="#"><i class="fa fa-play" aria-hidden="true"><span> Canciones</span></i></a>
+        <a href="#" onclick="CargarCanciones()" class="items1"><i class="fa fa-file" aria-hidden="true"><span> Cargar canciones</span></i></a>
+        <a href="#" onclick="TablaDeCanciones()" class="items1"><i class="fa fa-table" aria-hidden="true"><span> Tabla de canciones</span></i></a>
+        <a href="#" onclick="Solicitudes()" class="items1"><i class="fa fa-list-ol" aria-hidden="true"><span> Solicitudes</span></i></a>
+        <a href="#"><i class="fa fa-users" aria-hidden="true"><span> Usuarios</span></i></a>
+        <a href="#" onclick="UsuariosRegistrados()" class="items1"><i class="fa fa-registered" aria-hidden="true"><span> Usuarios Registrados</span></i></a>
+        <a href="#" onclick="RegistrarUsuario()" class="items1"><i class="fa fa-user-plus" aria-hidden="true"><span> Registrar usuario</span></i></a>
+        <a href="#" onclick="VerPlaylist()"><i class="fa fa-fast-forward" aria-hidden="true"><span> Mi Playilst</span></i></a>
+        <a href="#" onclick="CerrarSesion()"><i class="fa fa-sign-out" aria-hidden="true"><span> Cerrar sesión</span></i></a>
+    </div>
+    <br><br>
+
+    <br><br><br>
+    <section class="form-register">
+        <h4 style="font-size: 35px;"><i class="fa fa-user-plus" aria-hidden="true"></i> Registrar usuario</h4>
+        <label>Nombre:</label>
+        <input class="controls" type="text" name="nombres" id="nombre">
+        <label>Apellido:</label>
+        <input class="controls" type="text" name="apellidos" id="apellido">
+        <label>Usuario</label>
+        <input class="controls" type="text" name="nombres" id="usuario">
+        <label>Contraseña</label>
+        <input class="controls" type="password" name="nombres" id="contrasena">
+        <label>Confirmar contraseña</label>
+        <input class="controls" type="password" name="nombres" id="confirmarContra">
+        <button class="botons" type="button" onclick="RegistrarAdmin()">Registrar</button>
+    </section>
+
+    <br><br>
+    <footer>
+        <div class="contenedor">
+            <p class="copy">Music Station &copy; 2020</p>
+            <div class="sociales">
+                <a class="icon-facebook-official" href="#"></a>
+                <a class="icon-twitter" href="#"></a>
+                <a class="icon-facebook-official" href="#"></a>
+                <a class="icon-twitter" href="#"></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+
+function RegistrarAdmin() {
+
+var nombre = document.querySelector('#nombre').value
+var apellido = document.querySelector('#apellido').value
+var username = document.querySelector('#usuario').value
+var contrasena = document.querySelector('#contrasena').value
+var confirmarCont = document.querySelector('#confirmarContra').value
+
+if (contrasena == confirmarCont) {
+        var objeto = {
+            'nombre': nombre,
+            'apellido': apellido,
+            'username': username,
+            'contrasena': contrasena
+        }
+
+    fetch('http://localhost:5000/RegistrarAdmin', {
+        method: 'POST',
+        body: JSON.stringify(objeto),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(res => res.json())
+        .catch(err => {
+            console.error('Error:', err)
+            alert("Ocurrió un error al registrar al usuario.")
+        })
+        .then(response => {
+            if (response.message == "Failed") {
+                alert(`El nombre de usuario ${username} ya se encuentra registrado.`)
+            } else {
+                alert(`Se ha registrado con éxito. Ahora ${username} es un administrador`)
+                sessionStorage.setItem("usuario", username)
+                location.href = "Registrar_Usuario.html"
+            }
+        })
+    } else {
+        alert("Las contraseñas deben ser iguales.")
+    }
+
+
+
+    console.log(objeto)
+
+    }
+
+    //OPCIONES
+    function IrPerfil(){
+            alert("Si ingreso aqui")
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario",usuario)
+            location.href="Perfil1.html"
+        }
+
+        function CargarCanciones(){
+            alert("Si ingreso aqui")
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="Cargar_Canciones.html"
+        }
+
+        function TablaDeCanciones(){
+            alert("Si ingreso aqui")
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="Tabla_canciones.html"
+        }
+
+        function Solicitudes(){
+            alert("Si ingreso aqui")
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="CancionesSolicitadas.html"
+        }
+
+        function UsuariosRegistrados(){
+            alert("Si ingreso aqui")
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="Usuarios_Registrados.html"
+        }
+
+        function RegistrarUsuario(){
+            alert("Si ingreso aqui")
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="Registrar_Usuario.html"
+        }
+
+        function VerPlaylist(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="MiPlaylist1.html"
+        }
+
+        function CerrarSesion(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="PrimeraPagina.html"
+        }
+
+        function Inicio(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="PrimeraPagina.html"
+        }
+
+    </script>
+
+</body>
+</html>

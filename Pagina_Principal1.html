@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="Estilos_Todas_Paginas/E_PaginaPrincipal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <title>Página principal</title>
+</head>
+
+<body onload="MostrarMusica()">
+    
+    <input type="checkbox" id="check">
+    <header>
+        <label for="check">
+            <i class="fa fa-bars" id="sidebar_btn"></i>
+        </label>
+        <div class="left_area">
+            <h3>Music <span>Station</span></h3>
+        </div>
+        <div class="rigth_are">
+            <a href="#" onclick="Inicio()" class="logout_btn">Inicio</a>
+        </div>
+    </header>
+
+    <div class="sidebar">
+        <center>
+            <img src="Estilos_Todas_Paginas/music_station.jpg" class="procfile_image" alt="" style="width: 100px; height: 100px;">
+            <br><br>
+        </center>
+        <a href="#" onclick="IrPerfil()"><i class="fa fa-user" aria-hidden="true"><span> Perfil</span></i></a>
+        <a href="#"><i class="fa fa-play" aria-hidden="true"><span> Canciones</span></i></a>
+        <a href="#" onclick="CargarCanciones()" class="items"><i class="fa fa-file" aria-hidden="true"><span> Cargar canciones</span></i></a>
+        <a href="#" onclick="TablaDeCanciones()" class="items"><i class="fa fa-table" aria-hidden="true"><span> Tabla de canciones</span></i></a>
+        <a href="#" onclick="Solicitudes()" class="items"><i class="fa fa-list-ol" aria-hidden="true"><span> Solicitudes</span></i></a>
+        <a href="#"><i class="fa fa-users" aria-hidden="true"><span> Usuarios</span></i></a>
+        <a href="#" onclick="UsuariosRegistrados()" class="items"><i class="fa fa-registered" aria-hidden="true"><span> Usuarios Registrados</span></i></a>
+        <a href="#" onclick="RegistrarUsuario()" class="items"><i class="fa fa-user-plus" aria-hidden="true"><span> Registrar usuario</span></i></a>
+        <a href="#" onclick="VerPlaylist()"><i class="fa fa-fast-forward" aria-hidden="true"><span> Mi Playilst</span></i></a>
+        <a href="#" onclick="CerrarSesion()"><i class="fa fa-sign-out" aria-hidden="true"><span> Cerrar sesión</span></i></a>
+    </div>
+    
+    <div>
+        <h1>CANCIONES DISPONIBLES</h1>
+    </div>
+                <div id="CuerpoCanciones" class="cancion" style="display: inline-block;" style="text-align: center;" style="top: 100px;" style="padding: 10px;">
+                </div>
+
+    <footer>
+        <div class="contenedor">
+            <p class="copy">Music Station &copy; 2020</p>
+            <div class="sociales">
+                <a class="icon-facebook-official" href="#"></a>
+                <a class="icon-twitter" href="#"></a>
+                <a class="icon-facebook-official" href="#"></a>
+                <a class="icon-twitter" href="#"></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+    <script>
+
+        var username
+        function MostrarMusica() {
+            var tabla = document.querySelector('#CuerpoCanciones')
+            username = sessionStorage.usuario
+            fetch('http://localhost:5000/Musica')
+                .then(response => response.json())
+                .catch(error => {
+                    console.log(error)
+                })
+                .then(res => {
+                    for(var i in res){
+                            tabla.innerHTML +=
+                            `<div style="display: inline-block;" style="margin-top: 10px;">
+                             <iframe src="${res[i].spotify}" width="270" height="340" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe></th>
+                            <div style="text-align: center;">
+                            <button id="detalles_btn" type="button" style="margin-bottom: 10px;" value="${res[i].nombre}" onclick="verDetalles(this)" class="btn btn-primary">Ver detalles</button>
+                            <br>
+                            <button id="agregar_btn" type="button" value="${res[i].nombre}" style="margin-bottom: 10px;" onclick="obtenerCancion(this)" class="btn btn-success">Agregar a mi playlist</button>
+                            </div>
+                            </div>
+                            `
+                    }
+                })
+        }
+        
+        function verDetalles(pagina){
+            var cancion = pagina.value
+            var usuario = username
+            sessionStorage.setItem("buscar",cancion)
+            sessionStorage.setItem("persona",usuario)
+            location.href="Detalles_Canciones1.html"
+        }
+
+        function obtenerCancion(song){
+            var cargar = song.value
+            
+            fetch(`http://localhost:5000/Musica/${cargar}`)
+                .then(response => response.json())
+                .catch(error => {
+                    console.log(error)
+                })
+                .then(res => {
+                    var nombre = res.nombre
+                    var artista = res.artista
+                    var album = res.album
+                    var imagen = res.imagen
+                    var fecha = res.fecha
+                    var spotify = res.spotify
+                    var youtube = res.youtube
+                    agregarPlylist(nombre,artista,album,imagen,fecha,spotify,youtube)
+                })
+        }
+
+        function agregarPlylist(nombre1,artista1,album1,imagen1,fecha1,spotify1,youtube1){
+            var objeto = {
+                'usuario': username,
+                'nombre': nombre1,
+                'artista': artista1,
+                'album': album1,
+                'fecha': fecha1,
+                'imagen': imagen1,
+                'spotify': spotify1,
+                'youtube': youtube1       
+             }
+            console.log(objeto)
+            fetch('http://localhost:5000/AgregarPlaylist', {
+            method: 'POST',
+            body: JSON.stringify(objeto),
+            headers:{
+                'Content-Type': 'application/json'
+            }
+            }).then(res => res.json())
+            .catch(error => {
+                console.error('Error:', error)
+                alert("Se produjo un error al agregar a tu playlist.")
+                val = false
+            })
+            .then(response =>{
+                console.log('Success:', response);
+                alert("Se agregó a tu Playlist con éxito.")
+            }) 
+            
+        }
+
+
+        //OPCIONES
+        function IrPerfil(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario",usuario)
+            location.href="Perfil1.html"
+        }
+
+        function CargarCanciones(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="Cargar_Canciones.html"
+        }
+
+        function TablaDeCanciones(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="Tabla_canciones.html"
+        }
+
+        function Solicitudes(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="CancionesSolicitadas.html"
+        }
+
+        function UsuariosRegistrados(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="Usuarios_Registrados.html"
+        }
+
+        function RegistrarUsuario(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="Registrar_Usuario.html"
+        }
+
+        function VerPlaylist(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="MiPlaylist1.html"
+        }
+
+        function CerrarSesion(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="PrimeraPagina.html"
+        }
+
+        function Inicio(){
+            usuario = sessionStorage.usuario
+            sessionStorage.setItem("usuario", usuario)
+            location.href="Pagina_Principal1.html"
+        }
+
+    </script>
+
+</body>
+
+</html>
+
